@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video player</title>
+</head>
+<body>
+<script type="text/javascript" src="http://fb.me/react-with-addons-0.13.3.js"></script>>
+<script type="text/javascript" src="http://fb.me/JSXTransformer-0.12.0.js"></script>>
+<script type="text/jsx">
+  var PLAYER_ID = 'player';
+
+  var Player = React.createClass({
+
+    componentDidMount: function () {
+      document.getElementById(PLAYER_ID).addEventListener('ended', this.props.onEnded);
+    },
+
+    componentWillUnmount: function () {
+      document.getElementById(PLAYER_ID).removeEventListener('ended', this.props.onEnded);
+    },
+
+    render: function () {
+      return <video id={PLAYER_ID} src={this.props.src} width="500px" height="500px" controls autoPlay />;
+    }
+  });
+
+  var PlayerContainer = React.createClass({
+
+    getInitialState: function() {
+      return {
+        current: 0
+      }
+    },
+
+    onEnded: function () {
+      alert('Video ended');
+
+      var newCurrent = this.state.current + 1;
+      if (newCurrent >= this.props.playlist.length ) {
+        newCurrent = 0;
+      }
+
+      this.setState({
+        current: newCurrent
+      });
+    },
+
+    render: function () {
+      var src = this.props.playlist[this.state.current];
+
+      return <Player src={src} onEnded={this.onEnded} />;
+    }
+  });
+
+  var playList = [
+    'http://www.w3schools.com/html/mov_bbb.mp4',
+    'http://media.w3.org/2010/05/sintel/trailer.mp4'
+  ];
+
+  React.render(<PlayerContainer playlist={playList} />, document.body);
+
+</script>>
+</body>
+</html>
